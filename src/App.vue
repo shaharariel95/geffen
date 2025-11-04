@@ -21,6 +21,9 @@
             @delete-entry="deleteEntry"
           />
         </div>
+        <div v-if="currentPage === 'stats'">
+          <Statistics :entries="entries" />
+        </div>
       </main>
 
       <BottomNav :current-page="currentPage" @change-page="currentPage = $event" />
@@ -33,6 +36,7 @@ import { ref, onMounted } from 'vue'
 import AppHeader from './components/AppHeader.vue'
 import EntryForm from './components/EntryForm.vue'
 import HistoryList from './components/HistoryList.vue'
+import Statistics from './components/Statistics.vue'
 import BottomNav from './components/BottomNav.vue'
 
 // State
@@ -83,7 +87,7 @@ const cancelEdit = () => {
 }
 
 const deleteEntry = (id) => {
-  if (confirm('Are you sure you want to delete this entry?')) {
+  if (confirm('האם אתה/את בטוח/ה שברצונ/ת למחוק רשומה זו?')) {
     entries.value = entries.value.filter(e => e.id !== id)
     saveToLocalStorage()
   }

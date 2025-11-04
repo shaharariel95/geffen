@@ -37,6 +37,11 @@ body {
   color: inherit;
 }
 
+/* Set RTL direction globally so text and flow are right-to-left */
+html, body {
+  direction: rtl;
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -69,7 +74,8 @@ button:focus-visible {
   max-width: 1280px;
   margin: 0 auto;
   padding: 1rem;
-  text-align: center;
+  /* Make the app content align to the right in RTL mode */
+  text-align: right;
 }
 
 /* Dark-mode overrides when the `dark` class is present on a root ancestor (we toggle it on <html>) */

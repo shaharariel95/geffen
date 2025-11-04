@@ -1,60 +1,55 @@
 <template>
   <div class="space-y-4">
-    <h2 class="text-2xl font-bold mb-6">{{ editingId ? 'Edit Entry' : 'Add New Entry' }}</h2>
+  <h2 class="text-2xl font-bold mb-6">{{ editingId ? 'ערוך רשומה' : 'הוסף רשומה חדשה' }}</h2>
 
     <form @submit.prevent="onSubmit" class="space-y-4">
       <div>
-        <label class="block text-sm font-medium mb-2">Feeding Amount (ml)</label>
+  <label class="block text-sm font-medium mb-2">כמות האכלה (מ״ל)</label>
         <input
           v-model.number="localForm.feedingAmount"
           type="number"
           step="0.1"
           required
           class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-          placeholder="Enter amount"
+          placeholder="הזן כמות"
         />
       </div>
 
       <div>
-        <label class="block text-sm font-medium mb-2">Glucometer Reading (mg/dL)</label>
+        <label class="block text-sm font-medium mb-2">קריאת גלוקומטר (mg/dL)</label>
         <input
           v-model.number="localForm.glucometerReading"
           type="number"
           step="0.1"
           class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-          placeholder="Optional"
+          placeholder="אופציונלי"
         />
       </div>
 
       <div>
-        <label class="block text-sm font-medium mb-2">Nutrition Type</label>
-        <select
-          v-model="localForm.nutritionType"
-          required
-          class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-        >
-          <option value="">Select type</option>
-          <option value="Breast Milk">Breast Milk</option>
-          <option value="Formula">Formula</option>
-          <option value="Mixed">Mixed</option>
-          <option value="Solid Food">Solid Food</option>
-        </select>
-      </div>
-
-      <div>
-        <label class="block text-sm font-medium mb-2">Nutrition Amount (ml/g)</label>
+        <label class="block text-sm font-medium mb-2">סוג מזון</label>
         <input
-          v-model.number="localForm.nutritionAmount"
-          type="number"
-          step="0.1"
+          v-model="localForm.nutritionType"
+          type="text"
           required
           class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-          placeholder="Enter amount"
+          placeholder="הזן סוג מזון (למשל פורמולה, בננה, חלב אם)"
         />
       </div>
 
       <div>
-        <label class="block text-sm font-medium mb-2">Time</label>
+        <label class="block text-sm font-medium mb-2">כמות מזון (מ״ל/גרם או טקסט חופשי)</label>
+        <input
+          v-model="localForm.nutritionAmount"
+          type="text"
+          required
+          class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+          placeholder="הזן כמות (למשל 120, ~1/2 כוס, 'לפי הצורך')"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-2">זמן</label>
         <input
           v-model="localForm.time"
           type="datetime-local"
@@ -68,7 +63,7 @@
           type="submit"
           class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-2xl transition-colors"
         >
-          {{ editingId ? 'Update Entry' : 'Add Entry' }}
+          {{ editingId ? 'עדכן רשומה' : 'הוסף רשומה' }}
         </button>
         <button
           v-if="editingId"
@@ -76,7 +71,7 @@
           @click="$emit('cancel')"
           class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-2xl transition-colors"
         >
-          Cancel
+          ביטול
         </button>
       </div>
     </form>
@@ -118,12 +113,15 @@ watch(() => props.initial, (nv) => {
 const onSubmit = () => {
   // ensure numbers are numbers
   const payload = {
+    // keep feedingAmount numeric for calculations
     feedingAmount: Number(localForm.feedingAmount),
     glucometerReading: localForm.glucometerReading !== '' && localForm.glucometerReading !== null
       ? Number(localForm.glucometerReading)
       : null,
+    // free text nutrition type
     nutritionType: localForm.nutritionType,
-    nutritionAmount: Number(localForm.nutritionAmount),
+    // keep nutritionAmount as string to allow variable inputs
+    nutritionAmount: String(localForm.nutritionAmount),
     time: localForm.time
   }
   emit('save', payload)
